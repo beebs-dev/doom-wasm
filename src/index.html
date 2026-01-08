@@ -19,18 +19,26 @@
             html {
                 font-family: "VT323", monospace;
                 font-size: 12px;
+                width: 100%;
+                height: 100%;
             }
 
             body {
                 background-color: #111;
                 margin: 0;
-                padding: 2ch;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
                 /* vietnamese */
             }
 
             #container {
-                max-width: 930px;
-                margin: auto;
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .frame {
@@ -43,8 +51,7 @@
             /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
             canvas.frame {
                 background-color: black;
-                width: 800px;
-                height: 600px;
+                /* Size is controlled via JS to keep aspect ratio. */
             }
         </style>
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -54,6 +61,28 @@
             <canvas class="frame" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
         </div>
         <script>
+            function resizeCanvasToViewport() {
+                var canvas = document.getElementById("canvas");
+                if (!canvas) return;
+
+                // Original logical resolution is 800x600 (4:3).
+                var aspect = 800 / 600;
+                var vw = window.innerWidth;
+                var vh = window.innerHeight;
+
+                var w = vw;
+                var h = Math.floor(w / aspect);
+                if (h > vh) {
+                    h = vh;
+                    w = Math.floor(h * aspect);
+                }
+
+                canvas.style.width = w + "px";
+                canvas.style.height = h + "px";
+            }
+
+            window.addEventListener("resize", resizeCanvasToViewport);
+
             var commonArgs = ["-iwad", "doom1.wad", "-window", "-nogui", "-nomusic", "-config", "default.cfg", "-servername", "doomflare"];
 
             var Module = {
@@ -71,6 +100,9 @@
                 },
                 canvas: (function () {
                     var canvas = document.getElementById("canvas");
+
+                    resizeCanvasToViewport();
+
                     canvas.addEventListener(
                         "webglcontextlost",
                         function (e) {
