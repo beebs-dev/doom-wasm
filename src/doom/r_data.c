@@ -357,11 +357,11 @@ void R_GenerateLookup (int texnum)
 	    collump[x] = -1;	
 	    colofs[x] = texturecompositesize[texnum];
 	    
-	    if (texturecompositesize[texnum] > 0x10000-texture->height)
-	    {
-		I_Error ("R_GenerateLookup: texture %i is >64k",
-			 texnum);
-	    }
+	    //if (texturecompositesize[texnum] > 0x10000-texture->height)
+	    //{
+		//I_Error ("R_GenerateLookup: texture %i is >64k",
+		//	 texnum);
+	    //}
 	    
 	    texturecompositesize[texnum] += texture->height;
 	}
